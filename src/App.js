@@ -1,7 +1,9 @@
+import SignupPage from "./pages/SignupPage";
+
 function App() {
   return (
-    <div className="bg-blue-500">
-      <div>Hello</div>
+    <div>
+      <SignupPage />
     </div>
   );
 }
