@@ -1,4 +1,5 @@
 import SignupPage from "./pages/SignupPage";
+import { ToastContainer } from "react-toastify";
 
 function App() {
   return (
