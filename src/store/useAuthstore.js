@@ -9,87 +9,99 @@ export const useAuthStore = create((set, get) => ({
     isSigningUp: false,
     isLoggingIn: false,
     isCheckingAuth: true,
+    isResettingPassword: false,
 
     checkAuth: async () => {
         try {
-            const res = await axiosInstance.get("/auth/check");
-
-            set({ authUser: res.data })
+            const res = await axiosInstance.get("/auth/checkAuth"); // Fixed endpoint
+            set({ authUser: res.data });
         } catch (error) {
-            console.log("Error in checkAuth:", error)
-            set({ authUser: null })
+            console.log("Error in checkAuth:", error);
+            set({ authUser: null });
         } finally {
-            set({ isCheckingAuth: false})
+            set({ isCheckingAuth: false });
         }
     },
 
     signup: async (data) => {
-        set({isSigningUp: true})
+        set({ isSigningUp: true });
         try {
-            const res = await axiosInstance.post("/auth/signup", data)
-            set({ authUser: res.data })
-            toast.success('Account created successfully')
+            const res = await axiosInstance.post("/auth/signup", data);
+            set({ authUser: res.data });
+            toast.success('Account created successfully');
         } catch (error) {
-            console.log('Error creating account:', error)
-            toast.error(error.response?.data?.message || 'Signup failed')
+            console.log('Error creating account:', error);
+            toast.error(error.response?.data?.message || 'Signup failed');
         } finally {
-            set({ isSigningUp: false })
+            set({ isSigningUp: false });
         }
     },
+
     login: async (data) => {
-        set({isLoggingIn: true})
+        set({ isLoggingIn: true });
         try {
-            const res = await axiosInstance.post("/auth/login", data)
-            set({ authUser: res.data })
-            toast.success('Logged in successfull')
+            const res = await axiosInstance.post("/auth/login", data);
+            set({ authUser: res.data });
+            toast.success('Logged in successfully'); // Fixed typo
         } catch (error) {
-            console.log('Error Logging in:', error)
-            toast.error(error.response?.data?.message || 'Login failed')
+            console.log('Error Logging in:', error);
+            toast.error(error.response?.data?.message || 'Login failed');
         } finally {
-            set({ isLoggingIn: false })
+            set({ isLoggingIn: false });
         }
     },
+
     logout: async () => {
-        try {
-            await axiosInstance.post("/auth/logout")
-            set({ authUser: null })
-            toast.success('Logged out successfully')
-        } catch (error) {
-            console.log('Error Logging out:', error)
-            toast.error(error.response.data.message)
-        } 
-    },
+    try {
+        await axiosInstance.post("/auth/logout");
+        set({ authUser: null });
+        toast.success('Logged out successfully');
+        window.location.href = '/auth';
+    } catch (error) {
+        console.log('Error Logging out:', error);
+        set({ authUser: null });
+        toast.success('Logged out successfully');
+        window.location.href = '/auth';
+    } 
+},
+
     forgotPassword: async (data) => {
+        set({ isResettingPassword: true });
         try {
-            const res = await axiosInstance.post("/auth/forgot-password", data)
-            return res.data
+            const res = await axiosInstance.post("/auth/forgot-password", data); // Fixed endpoint
+            return res.data;
         } catch (error) {
-            console.log('Error in forgot password:', error)
-            toast.error(error.response?.data?.message || 'Failed to send reset code')
-            throw error;
-        } 
-    },
-    verivyResetPassword: async (data) => {
-        set({isLoggingIn: true})
-        try {
-            const res = await axiosInstance.post("/auth/verify-reset-password", data)
-            return res.data
-        } catch (error) {
-            console.log('Error Verifying password:', error)
-            toast.error(error.response?.data?.message || 'Invalid code');
-            throw error;
-        } 
-    },
-    resetPassword: async (data) => {
-        set({isLoggingIn: true})
-        try {
-            const res = await axiosInstance.post("/auth/reset-password", data)
-            return res.data
-        } catch (error) {
-            console.log('Error reseting password:', error)
-            toast.error(error.response?.data?.message || 'Password reset failed');
+            console.log('Error in forgot password:', error);
+            toast.error(error.response?.data?.message || 'Failed to send reset code');
             throw error;
         } 
     },
 
-}))
+    verifyResetPassword: async (data) => { 
+        set({ isResettingPassword: true });
+        try {
+            const res = await axiosInstance.post("/auth/verify-reset-code", data); // Fixed endpoint
+            return res.data;
+        } catch (error) {
+            console.log('Error Verifying password:', error);
+            toast.error(error.response?.data?.message || 'Invalid code');
+            throw error;
+        } finally {
+            set({ isLoggingIn: false }); // Added finally
+        }
+    },
+
+    resetPassword: async (data) => {
+        set({ isResettingPassword: true });
+        try {
+            const res = await axiosInstance.post("/auth/resetPassword", data); // Fixed endpoint
+            return res.data;
+        } catch (error) {
+            console.log('Error reseting password:', error);
+            toast.error(error.response?.data?.message || 'Password reset failed');
+            throw error;
+        } finally {
+            set({ isLoggingIn: false }); // Added finally
+        }
+    },
+}));

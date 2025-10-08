@@ -1,26 +1,50 @@
 import SignupPage from "./pages/SignupPage";
 import { ToastContainer } from "react-toastify";
 import { useAuthStore } from "./store/useAuthstore";
-import { Navigate, Routes } from "react-router-dom";
+import { Navigate, Routes, Route } from "react-router-dom";
 import HomePage from "./pages/HomePage";
-import { Route } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { Loader2 } from 'lucide-react';
 
 function App() {
+  const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
+  const [isInitialized, setIsInitialized] = useState(false);
 
-  const {authUser, checkAuth} = useAuthStore();
   useEffect(() => {
-    checkAuth()
-  }, [checkAuth])
+    const initializeAuth = async () => {
+      await checkAuth();
+      setIsInitialized(true);
+    };
+    initializeAuth();
+  }, [checkAuth]);
+
+  // Show loading spinner while checking authentication
+  if (!isInitialized || isCheckingAuth) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-purple-50">
+        <div className="text-center">
+          <Loader2 className="animate-spin text-purple-500 mx-auto mb-4" size={32} />
+          <p className="text-purple-700">Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div>
+    <div className="App">
       <Routes>
-      <Route path="/" element={authUser ? <HomePage /> : <Navigate to="/auth"/>} />
-      <Route path="/auth" element={!authUser ? <SignupPage /> : <Navigate to="/"/>}/>
-      <Route path="*" element={<Navigate to="/" />}/>
+        <Route 
+          path="/" 
+          element={authUser ? <HomePage /> : <Navigate to="/auth" replace />} 
+        />
+        <Route 
+          path="/auth" 
+          element={!authUser ? <SignupPage /> : <Navigate to="/" replace />}
+        />
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
-       <ToastContainer 
+      
+      <ToastContainer 
         position="top-right"
         autoClose={3000}
         hideProgressBar={false}
@@ -30,6 +54,7 @@ function App() {
         pauseOnFocusLoss
         draggable
         pauseOnHover
+        theme="light"
       />
     </div>
   );

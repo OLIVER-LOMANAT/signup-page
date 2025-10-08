@@ -15,7 +15,17 @@ function SignupPage() {
         newPassword: ""
     })
 
-    const { signup, login, isSigningup, isLoggingIn, forgotPassword, verifyResetPassword, resetPassword, isResettingPassword } = useAuthStore();
+    // FIXED: Correct state variable names
+    const { 
+        signup, 
+        login, 
+        isSigningUp, 
+        isLoggingIn, 
+        forgotPassword, 
+        verifyResetPassword, 
+        resetPassword, 
+        isResettingPassword 
+    } = useAuthStore();
 
     function validateForm() {
         if (isForgotPassword) {
@@ -58,9 +68,10 @@ function SignupPage() {
                     }
                 } else if (forgotPasswordStep === 2) {
                     try {
+                        // FIXED: Changed resetCode to code to match backend
                         await verifyResetPassword({ 
                             email: formData.email, 
-                            resetCode: formData.resetCode 
+                            code: formData.resetCode 
                         });
                         setForgotPasswordStep(3);
                         toast.success("Code verified successfully");
@@ -69,9 +80,10 @@ function SignupPage() {
                     }
                 } else if (forgotPasswordStep === 3) {
                     try {
+                        // FIXED: Changed resetCode to code to match backend
                         await resetPassword({ 
                             email: formData.email, 
-                            resetCode: formData.resetCode,
+                            code: formData.resetCode,
                             newPassword: formData.newPassword 
                         });
                         toast.success("Password reset successfully");
@@ -155,6 +167,7 @@ function SignupPage() {
                                             placeholder='your@email.com' 
                                             value={formData.email} 
                                             onChange={(e) => setFormData({...formData, email: e.target.value})} 
+                                            autoComplete="email"
                                             required
                                         />
                                     </div>
@@ -172,6 +185,7 @@ function SignupPage() {
                                             placeholder='Enter 6-digit code' 
                                             value={formData.resetCode} 
                                             onChange={(e) => setFormData({...formData, resetCode: e.target.value})} 
+                                            autoComplete="one-time-code"
                                             required
                                         />
                                     </div>
@@ -189,6 +203,7 @@ function SignupPage() {
                                             placeholder='******' 
                                             value={formData.newPassword} 
                                             onChange={(e) => setFormData({...formData, newPassword: e.target.value})} 
+                                            autoComplete="new-password"
                                             required
                                         />
                                     </div>
@@ -244,26 +259,51 @@ function SignupPage() {
                             <label className='block text-gray-700 mb-2'>Full Name:</label>
                             <div className='relative'>
                                 <User className='absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400'size={20}/>
-                                <input type='text' className='w-full pl-12 px-3 py-2 border border-gray-400 rounded-md' placeholder='Dida Loma' value={formData.username} onChange={(e) => setFormData({...formData, username: e.target.value})} required/>
+                                <input 
+                                    type='text' 
+                                    className='w-full pl-12 px-3 py-2 border border-gray-400 rounded-md' 
+                                    placeholder='Dida Loma' 
+                                    value={formData.username} 
+                                    onChange={(e) => setFormData({...formData, username: e.target.value})} 
+                                    autoComplete="name"
+                                    required
+                                />
                             </div>
                         </div>
                         <div className='mb-2'>
                             <label className='block text-gray-700 mt-2'>Email: </label>
                             <div className='relative'>
                                 <Mail className='absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400' size={20}/>
-                                <input type='email' className='w-full pl-12 px-3 py-2 border border-gray-400 rounded-md' placeholder='your@email.com' value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} required/>
+                                <input 
+                                    type='email' 
+                                    className='w-full pl-12 px-3 py-2 border border-gray-400 rounded-md' 
+                                    placeholder='your@email.com' 
+                                    value={formData.email} 
+                                    onChange={(e) => setFormData({...formData, email: e.target.value})} 
+                                    autoComplete="email"
+                                    required
+                                />
                             </div>
                         </div>
                         <div className='mb-2'>
                             <label className='block text-gray-700 mt-2'>Password: </label>
                             <div className='relative'>
                                 <Lock className='absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400' size={20}/>
-                                <input type='password' className='w-full pl-12 px-3 py-2 border border-gray-400 rounded-md' value={formData.password} onChange={(e) => setFormData({...formData, password: e.target.value})} placeholder='******' required/>
+                                <input 
+                                    type='password' 
+                                    className='w-full pl-12 px-3 py-2 border border-gray-400 rounded-md' 
+                                    value={formData.password} 
+                                    onChange={(e) => setFormData({...formData, password: e.target.value})} 
+                                    placeholder='******' 
+                                    autoComplete="new-password"
+                                    required
+                                />
                             </div>
                         </div>
                         <div className='text-center'>
-                            <button type='submit' className='w-full text-white font-bold px-3 py-2 mt-3 mb-3 bg-purple-500 rounded-md hover:bg-purple-300 hover:text-black transition duration-200 flex items-center justify-center gap-2' disabled={isSigningup}>
-                                {isSigningup ? (
+                            {/* FIXED: isSigningUp instead of isSigningup */}
+                            <button type='submit' className='w-full text-white font-bold px-3 py-2 mt-3 mb-3 bg-purple-500 rounded-md hover:bg-purple-300 hover:text-black transition duration-200 flex items-center justify-center gap-2' disabled={isSigningUp}>
+                                {isSigningUp ? (
                                     <>
                                     <Loader2 className='size-5 animate-spin'/>
                                     Loading...
@@ -287,14 +327,30 @@ function SignupPage() {
                             <label className='block text-gray-700 mt-2'>Email:</label>
                             <div className='relative'>
                                 <Mail className="absolute left-3 top-1/2 text-gray-400 transform -translate-y-1/2" size={20}/>
-                                <input type='email' className='w-full pl-12 px-3 py-2 border border-gray-400 rounded-md' placeholder='your@email.com' value={formData.email} onChange={(e) => setFormData({...formData, email: e.target.value})} required/>
+                                <input 
+                                    type='email' 
+                                    className='w-full pl-12 px-3 py-2 border border-gray-400 rounded-md' 
+                                    placeholder='your@email.com' 
+                                    value={formData.email} 
+                                    onChange={(e) => setFormData({...formData, email: e.target.value})} 
+                                    autoComplete="email"
+                                    required
+                                />
                             </div>
                         </div>
                         <div className='mb-2'>
                             <label className='block text-gray-700 mt-2'>Password:</label>
                             <div className='relative'>
                                 <Lock className="absolute left-3 top-1/2 text-gray-400 transform -translate-y-1/2" size={20}/>
-                                <input type='password' className='w-full pl-12 px-3 py-2 border border-gray-400 rounded-md' placeholder='******' value={formData.password} onChange={(e) => setFormData({...formData, password: e.target.value})} required/>
+                                <input 
+                                    type='password' 
+                                    className='w-full pl-12 px-3 py-2 border border-gray-400 rounded-md' 
+                                    placeholder='******' 
+                                    value={formData.password} 
+                                    onChange={(e) => setFormData({...formData, password: e.target.value})} 
+                                    autoComplete="current-password"
+                                    required
+                                />
                             </div>
                         </div>
                         
@@ -310,6 +366,7 @@ function SignupPage() {
                         </div>
 
                         <div>
+                            {/* FIXED: isLoggingIn instead of isLoggingIn (already correct) */}
                             <button type='submit' className='w-full text-white font-bold px-3 py-2 mt-3 mb-3 bg-purple-500 rounded-md hover:bg-purple-300 hover:text-black transition duration-200 flex items-center justify-center gap-2' disabled={isLoggingIn}>
                                 {isLoggingIn ? (
                                     <>
