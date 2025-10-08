@@ -66,6 +66,7 @@ export const useAuthStore = create((set, get) => ({
 },
 
     forgotPassword: async (data) => {
+        console.log('Current timeout:', axiosInstance.defaults.timeout);
         set({ isResettingPassword: true });
         try {
             const res = await axiosInstance.post("/auth/forgot-password", data); // Fixed endpoint
