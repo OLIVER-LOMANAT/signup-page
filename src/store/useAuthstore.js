@@ -78,30 +78,30 @@ export const useAuthStore = create((set, get) => ({
     },
 
     verifyResetPassword: async (data) => { 
-        set({ isResettingPassword: true });
-        try {
-            const res = await axiosInstance.post("/auth/verify-reset-code", data); // Fixed endpoint
-            return res.data;
-        } catch (error) {
-            console.log('Error Verifying password:', error);
-            toast.error(error.response?.data?.message || 'Invalid code');
-            throw error;
-        } finally {
-            set({ isLoggingIn: false }); // Added finally
-        }
-    },
+    set({ isResettingPassword: true });
+    try {
+        const res = await axiosInstance.post("/auth/verify-reset-code", data);
+        return res.data;
+    } catch (error) {
+        console.log('Error Verifying password:', error);
+        toast.error(error.response?.data?.message || 'Invalid code');
+        throw error;
+    } finally {
+        set({ isResettingPassword: false }); // Fixed: should be isResettingPassword, not isLoggingIn
+    }
+},
 
-    resetPassword: async (data) => {
-        set({ isResettingPassword: true });
-        try {
-            const res = await axiosInstance.post("/auth/resetPassword", data); // Fixed endpoint
-            return res.data;
-        } catch (error) {
-            console.log('Error reseting password:', error);
-            toast.error(error.response?.data?.message || 'Password reset failed');
-            throw error;
-        } finally {
-            set({ isLoggingIn: false }); // Added finally
-        }
-    },
+resetPassword: async (data) => {
+    set({ isResettingPassword: true });
+    try {
+        const res = await axiosInstance.post("/auth/resetPassword", data);
+        return res.data;
+    } catch (error) {
+        console.log('Error reseting password:', error);
+        toast.error(error.response?.data?.message || 'Password reset failed');
+        throw error;
+    } finally {
+        set({ isResettingPassword: false }); // Fixed: should be isResettingPassword, not isLoggingIn
+    }
+},
 }));
