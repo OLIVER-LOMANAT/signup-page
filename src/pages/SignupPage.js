@@ -301,7 +301,6 @@ function SignupPage() {
                             </div>
                         </div>
                         <div className='text-center'>
-                            {/* FIXED: isSigningUp instead of isSigningup */}
                             <button type='submit' className='w-full text-white font-bold px-3 py-2 mt-3 mb-3 bg-purple-500 rounded-md hover:bg-purple-300 hover:text-black transition duration-200 flex items-center justify-center gap-2' disabled={isSigningUp}>
                                 {isSigningUp ? (
                                     <>
@@ -354,7 +353,7 @@ function SignupPage() {
                             </div>
                         </div>
                         
-                        {/* ADDED FORGOT PASSWORD LINK */}
+                        {/*FORGOT PASSWORD LINK */}
                         <div className="text-right mb-4">
                             <button 
                                 type="button" 
@@ -366,7 +365,7 @@ function SignupPage() {
                         </div>
 
                         <div>
-                            {/* FIXED: isLoggingIn instead of isLoggingIn (already correct) */}
+                            {/* */}
                             <button type='submit' className='w-full text-white font-bold px-3 py-2 mt-3 mb-3 bg-purple-500 rounded-md hover:bg-purple-300 hover:text-black transition duration-200 flex items-center justify-center gap-2' disabled={isLoggingIn}>
                                 {isLoggingIn ? (
                                     <>
@@ -389,7 +388,7 @@ function SignupPage() {
                 <div className='text-center  max-w-md p-6'>
                         <MessageSquare className='mx-auto mb-4 animate-bounce' size={54}/>
                         <h1 className='text-3xl font-bold mb4'>Join our community</h1>
-                        <p className='text-xl'>Connect with friends, share moments, and stay in touch with your loved ones.</p>
+                        <p className='text-xl'>{isLogin ? ('Connect with friends, share moments, and stay in touch with your loved ones.') : ('Welcome back again. Keep In touch with your friends.')}</p>
                 </div>
             </div>
         </div>

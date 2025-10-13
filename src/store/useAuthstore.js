@@ -13,7 +13,7 @@ export const useAuthStore = create((set, get) => ({
 
     checkAuth: async () => {
         try {
-            const res = await axiosInstance.get("/auth/checkAuth"); // Fixed endpoint
+            const res = await axiosInstance.get("/auth/checkAuth"); 
             set({ authUser: res.data });
         } catch (error) {
             console.log("Error in checkAuth:", error);
@@ -42,7 +42,7 @@ export const useAuthStore = create((set, get) => ({
         try {
             const res = await axiosInstance.post("/auth/login", data);
             set({ authUser: res.data });
-            toast.success('Logged in successfully'); // Fixed typo
+            toast.success('Logged in successfully');
         } catch (error) {
             console.log('Error Logging in:', error);
             toast.error(error.response?.data?.message || 'Login failed');
@@ -69,7 +69,7 @@ export const useAuthStore = create((set, get) => ({
         console.log('Current timeout:', axiosInstance.defaults.timeout);
         set({ isResettingPassword: true });
         try {
-            const res = await axiosInstance.post("/auth/forgot-password", data); // Fixed endpoint
+            const res = await axiosInstance.post("/auth/forgot-password", data); 
             return res.data;
         } catch (error) {
             console.log('Error in forgot password:', error);
@@ -88,7 +88,7 @@ export const useAuthStore = create((set, get) => ({
         toast.error(error.response?.data?.message || 'Invalid code');
         throw error;
     } finally {
-        set({ isResettingPassword: false }); // Fixed: should be isResettingPassword, not isLoggingIn
+        set({ isResettingPassword: false }); 
     }
 },
 
@@ -102,7 +102,7 @@ resetPassword: async (data) => {
         toast.error(error.response?.data?.message || 'Password reset failed');
         throw error;
     } finally {
-        set({ isResettingPassword: false }); // Fixed: should be isResettingPassword, not isLoggingIn
+        set({ isResettingPassword: false });
     }
 },
 }));
